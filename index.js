@@ -19,6 +19,7 @@ app.get("/", function (req, res) {
 });
 
 // your first API endpoint...
+// ME START
 // app.get() route is a string
 app.get("/api/:inputDate", function (req, res) {
     let theDate = new Date(req.params.inputDate);
@@ -38,22 +39,28 @@ app.get("/api/:inputDate", function (req, res) {
 
     // respond with JSON showing the unix time and UTC time
     res.json({
-        // getTime() returns the time in UNIX format ('ms' since midnight, 70-01-01 UTC)
+        // getTime() returns the time value in UNIX format ('ms' since midnight, 70-01-01 UTC)
+        // key unix, value current time
         unix: theDate.getTime(),
+        // toUTCString() returns the time (current time in this case) in UTC format
+        // key utc, value current time
         utc: theDate.toUTCString(),
     });
 });
-// FCC: deal with empty date string in URL by returning unix key (time) and utc key (time)
+// FCC: deal with empty date string in URL by returning unix key with value time and utc key with value time
 app.get("/api", function (req, res) {
     // empty Date constructor gives the current time
     let curDate = new Date(); 
     res.json({
         // getTime() returns the time (current time in this case) in UNIX format ('ms' since midnight, 70-01-01 UTC)
+        // key unix, value current time
         unix: curDate.getTime(),
-        // toString() returns the time (current time in this case) in UTC format
+        // toUTCString() returns the time (current time in this case) in UTC format
+        // key utc, value current time
         utc: curDate.toUTCString(),
     });
 });
+// ME END
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
