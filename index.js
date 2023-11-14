@@ -2,16 +2,13 @@
 // where your node app starts
 
 // init project
-let express = require("express");
-let app = express();
-
-const daysArr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var express = require("express");
+var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
-let cors = require("cors");
-app.use(cors({ optionsSuccessStatus: 200 }));  // some legacy browsers choke on 204
+var cors = require("cors");
+app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -21,31 +18,44 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + "/views/index.html");
 });
 
+// your first API endpoint...
+// app.get() route is a string
+app.get("/api/:inputDate", function (req, res) {
+    let theDate = new Date(req.params.inputDate);
 
-// api/:date endpoint
-app.get("/api/:date", function (req, res) {
-    console.log(req.params.date.toString());
-    const datedata = new Date(isNaN(req.params.date) ? req.params.date : req.params.date * 1);
-    if (datedata.getTime()) {
-        console.log(datedata);
-        const timeString = `${daysArr[datedata.getDay()]}, ${datedata.getDate() > 9 ? datedata.getDate() : `0${datedata.getDate()}`} ${monthArr[datedata.getMonth()]} ${datedata.getFullYear()} ${datedata.getHours() > 9 ? datedata.getHours() : `0${datedata.getHours()}`}:${datedata.getMinutes() > 9 ? datedata.getMinutes() : `0${datedata.getMinutes()}`}:${datedata.getSeconds() > 9 ? datedata.getSeconds() : `0${datedata.getSeconds()}`} GMT`;
-        res.json({ "unix": datedata.getTime(), "utc": timeString });
-    } else {
-        res.json({ error: "Invalid Date" });
+    // toUTCString() returns "Invalid Date" if the inputDate parameter is invalid as input to Date
+    if (theDate.toUTCString() === "Invalid Date") {
+        // assume input is a number and convert this number to a date
+        theDate = new Date(Number(req.params.inputDate));
+        // check the date again for validity (was assumption of number correct?)
+        if (theDate.toUTCString() === "Invalid Date") {
+            // error respnse asked for by FCC
+            res.json({ error: "Invalid Date" });
+            // can only return one 'res'ponse from function route
+            return;
+        }
     }
 
+    // respond with JSON showing the unix time and UTC time
+    res.json({
+        // getTime() returns the time in UNIX format ('ms' since midnight, 70-01-01 UTC)
+        unix: theDate.getTime(),
+        utc: theDate.toUTCString(),
+    });
 });
-
-// api endpoint
+// FCC: deal with empty date string in URL by returning unix key (time) and utc key (time)
 app.get("/api", function (req, res) {
-    const datedata = new Date();
-    const timeString = `${daysArr[datedata.getDay()]}, ${datedata.getDate() > 9 ? datedata.getDate() : `0${datedata.getDate()}`} ${monthArr[datedata.getMonth()]} ${datedata.getFullYear()} ${datedata.getHours() > 9 ? datedata.getHours() : `0${datedata.getHours()}`}:${datedata.getMinutes() > 9 ? datedata.getMinutes() : `0${datedata.getMinutes()}`}:${datedata.getSeconds() > 9 ? datedata.getSeconds() : `0${datedata.getSeconds()}`} GMT`;
-    console.log(datedata);
-    res.json({ "unix": datedata.getTime(), "utc": timeString });
-
+    // empty Date constructor gives the current time
+    let curDate = new Date(); 
+    res.json({
+        // getTime() returns the time (current time in this case) in UNIX format ('ms' since midnight, 70-01-01 UTC)
+        unix: curDate.getTime(),
+        // toString() returns the time (current time in this case) in UTC format
+        utc: curDate.toUTCString(),
+    });
 });
 
-// listen for requests
-let listener = app.listen(process.env.PORT, function () {
+// listen for requests :)
+var listener = app.listen(process.env.PORT, function () {
     console.log("Your app is listening on port " + listener.address().port);
 });
