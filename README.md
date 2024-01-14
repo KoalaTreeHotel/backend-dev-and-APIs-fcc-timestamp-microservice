@@ -4,3 +4,5 @@ This is the boilerplate code for the Timestamp Microservice project. Instruction
 
 Install dependencies: npm install
 Start: npm run start (run package.json "start" script)
+
+Upload code to replit.com or glitch.com
