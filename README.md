@@ -1,6 +1,6 @@
 # Timestamp Microservice
 
-Returns the Unix timestamp (in milliseconds) of date input by the user. Uses Node and Express. FCC Backend API final project.
+Returns the Unix Timestamp for a date input by the user (the Unix Timestamp is the time in milliseconds since midnight 1970-01-01 UTC). Uses Node and Express. FCC Backend API final project.
 
 Instructions:
 
