@@ -9,6 +9,7 @@ Instructions:
 
 See this code in production:
 
-- <https://replit.com/@sfraser-dev/boilerplate-project-timestamp>
-
-*Need to upload code to replit.com or glitch.com for FCC verification.*
+- Replit
+    - <https://replit.com/@sfraser-dev/boilerplate-project-timestamp>
+- Gitpod
+    - <gitpod.io/#https://github.com/sfraser-dev/javascript-node-express-unix-timestamp-microservice>
